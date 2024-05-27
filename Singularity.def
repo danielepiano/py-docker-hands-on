@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: python:3.9-slim
+
+%post
+    # Set the working directory inside the container
+    mkdir -p /app
+    cd /app
+
+    # Copy the requirements file into the container
+    cp /mnt/requirements.txt /app/requirements.txt
+
+    # Install the required packages
+    pip install --no-cache-dir -r requirements.txt
+
+%files
+    requirements.txt /mnt/
+    ascii_image_converter.py /app/
+
+%environment
+    export PYTHONPATH=/app
+
+%runscript
+    exec python /app/ascii_image_converter.py --file "$@" --cols 200
